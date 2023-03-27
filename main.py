@@ -58,6 +58,16 @@ def index():
                     email=email, date=date_object, status=status)
         db.session.add(form)
         db.session.commit()
+
+        message_body = f"Thank you for your submission, {first_name}!" \
+                       f"\n{first_name}\n{last_name}\n{date}\n" \
+                       f"We appreciate your participation!"       
+        message = Message(subject="New Form Submission",
+                          sender=app.config["MAIL_USERNAME"],
+                          recipients=[email],
+                          body=message_body)
+        mail.send(message)
+        
         flash(f"{first_name}, your form was submitted successfully!", "success")
 
     return render_template("index.html")
